@@ -16,7 +16,8 @@ class RaiderIOApi(Api):
             f"&name={name}"
             "&fields=mythic_plus_scores_by_season:current")
 
-    def get_character_score(self, character, tag="all") -> int:
+    @staticmethod
+    def get_character_score(character, tag="all") -> int:
         if character.get("mythic_plus_scores_by_season"):
             season1 = character["mythic_plus_scores_by_season"][0]
             # only 1 season atm, find correct season here.

@@ -18,13 +18,13 @@ class BotCog(Cog):
         try:
             self.bot.load_extension(extension)
         except Exception as e:
-            return await ctx.send(f"Loading {extension} failed:\n``` {e}```")
+            print(f"Loading {extension} failed:\n``` {e}```")
 
         await ctx.send("done")
 
-    @command()
-    async def shutdown(self, ctx):
-        self.bot.close()
+    # @command()
+    # async def shutdown(self, ctx):
+    #     await self.bot.close()
 
 
 def setup(bot: Bot) -> None:
