@@ -1,6 +1,7 @@
+from asyncio.tasks import Task
 import logging
 import socket
-from typing import Optional
+from typing import List, Optional, Set
 
 from aiohttp import AsyncResolver, ClientSession, TCPConnector
 from discord import Intents
@@ -9,8 +10,10 @@ from discord.ext.commands import Bot
 
 log = logging.getLogger("bot")
 EXTENSIONS = [
-    "bot.cogs.raiderio",
+    # "bot.cogs.raiderio",
+    "bot.cogs.nova",
     "bot.cogs.bot",
+    "bot.cogs.account"
 ]
 
 
@@ -30,6 +33,7 @@ class RaiderIOBot(Bot):
 
         super().__init__(*args, **kwargs)
 
+        self.tasks: Set[Task] = set()
         self.http_session: Optional[ClientSession] = None
         self._connector = None
         self._resolver = None
@@ -43,11 +47,14 @@ class RaiderIOBot(Bot):
                 log.info(f"Loading... {extension:<22} Success!")
             except Exception as e:
                 log.exception(f"\nLoading... {extension:<22} Failed!")
-                print("-"*25)
+                print("-" * 25)
                 print(f"Loading... {extension:<22} Failed!")
-                print(e, "\n", "-"*25, "\n")
+                print(e, "\n", "-" * 25, "\n")
 
     async def close(self) -> None:
+        for task in self.tasks:
+            task.cancel()
+
         await super().close()
 
         if self.http_session:

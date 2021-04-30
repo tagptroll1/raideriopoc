@@ -5,7 +5,7 @@ from discord import Guild, TextChannel
 from discord.ext.commands import Bot, Cog, command
 from discord.ext.commands.core import has_guild_permissions
 
-from bot.contants import Emojis, GUILD_ID, BOOSTER_CHANNEL, Roles
+from bot.contants import Emojis, GUILD_ID, BOOSTER_CHANNEL, Regex, Roles
 from bot.services.raiderio_api import RaiderIOApi
 
 
@@ -18,8 +18,7 @@ class RaiderIOCog(Cog):
         self.role_threshhold: int = 1300
         self.reclaim_channel: TextChannel = None
         self.guild: Guild = None
-        self.raiderio_regex = re.compile(
-            r"https:\/\/raider\.io\/characters\/eu\/(.+)\/([^?.]+)")
+        self.raiderio_regex = re.compile(Regex.RAIDERIO_LINK)
 
         self.roles = {}
 
