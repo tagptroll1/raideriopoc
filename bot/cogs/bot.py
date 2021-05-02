@@ -1,10 +1,10 @@
-from discord.ext.commands import Bot, Cog, command
-
+from discord.ext.commands import Bot, Cog, command, has_guild_permissions
 
 class BotCog(Cog):
     def __init__(self, bot: Bot):
         self.bot: Bot = bot
 
+    @has_guild_permissions(administrator=True)
     @command(name="reload", aliases=["r"])
     async def reload_extension(self, ctx, *, extension: str) -> None:
         if not extension.startswith("bot.cogs."):

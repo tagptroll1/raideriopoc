@@ -1,5 +1,6 @@
 from io import BytesIO
 from typing import Optional
+from discord.ext.commands.core import has_guild_permissions
 import xlsxwriter
 import discord
 from discord.ext.commands import Bot, Cog, command
@@ -10,9 +11,10 @@ class AccountCog(Cog):
     def __init__(self, bot: Bot):
         self.bot: Bot = bot
         self.api_base = "http://localhost:8000/api/v1"
-        self.api_token = "-"
+        self.api_token = ""
 
     @command()
+    @has_guild_permissions(manage_roles=True, administrator=True)
     async def register(self, ctx, member: Optional[discord.User] = None, realm=None, name=None, region="eu"):
         member = member or ctx.author
         if not realm and not name:
@@ -38,8 +40,11 @@ class AccountCog(Cog):
         ) as resp:
             if resp.status == 200 or resp.status == 201:
                 await ctx.send("Ok :)")
+            else:
+                await ctx.send("failed, idk why")
 
     @command()
+    @has_guild_permissions(manage_roles=True, administrator=True)
     async def registerurl(self, ctx, url, member: discord.User = None):
         if member:
             account_id = member.id
@@ -58,8 +63,11 @@ class AccountCog(Cog):
         ) as resp:
             if resp.status == 200 or resp.status == 201:
                 await ctx.send("Ok :)")
+            else:
+                await ctx.send("failed, idk why")
 
     @command()
+    @has_guild_permissions(manage_roles=True, administrator=True)
     async def deduct(self, ctx, member: discord.User,
                      amount: int, *, comment=None):
         if amount > 0:
@@ -79,6 +87,8 @@ class AccountCog(Cog):
         ) as resp:
             if resp.status == 200 or resp.status == 201:
                 await ctx.send("Ok :)")
+            else:
+                await ctx.send("failed, idk why")
 
     @command()
     async def balance(self, ctx, member: discord.User = None):
@@ -93,8 +103,11 @@ class AccountCog(Cog):
             if resp.status == 200 or resp.status == 201:
                 json = await resp.json()
                 await ctx.send(json["amount"] or 0)
+            else:
+                await ctx.send("failed, idk why")
 
     @command()
+    @has_guild_permissions(manage_roles=True, administrator=True)
     async def strikereport(self, ctx):
         async with self.bot.http_session.get(
             f"{self.api_base}/transactions",
@@ -131,6 +144,7 @@ class AccountCog(Cog):
         await ctx.send("done", file=discord.File(fp=output, filename="strikereport.xlsx"))
 
     @command()
+    @has_guild_permissions(manage_roles=True, administrator=True)
     async def setpaymentcharurl(self, ctx, url, member: discord.User = None):
         member = member or ctx.author
         async with self.bot.http_session.put(
@@ -148,6 +162,7 @@ class AccountCog(Cog):
         await ctx.send("done")
 
     @command()
+    @has_guild_permissions(manage_roles=True, administrator=True)
     async def setpaymentchar(self, ctx, char, realm, region, member: discord.User = None):
         member = member or ctx.author
         async with self.bot.http_session.put(
