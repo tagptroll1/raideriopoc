@@ -1,12 +1,11 @@
 import asyncio
-from asyncio.tasks import Task
 from itertools import chain
-from typing import Callable, List
+from typing import Callable
 
 from discord import Message, Embed
-from discord.emoji import Emoji
 from discord.ext.commands import command
 from discord.ext.commands import Bot, Cog
+from discord.ext.commands.core import has_guild_permissions
 
 from bot.services.raiderio_api import RaiderIOApi
 from bot.contants import Emojis
@@ -34,6 +33,7 @@ class NovaCog(Cog):
             await re.clear()
 
     @command()
+    @has_guild_permissions(manage_roles=True, administrator=True)
     async def new_run(self, ctx, faction, *, info=None):
         faction = Emojis.ALLIANCE
 

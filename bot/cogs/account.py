@@ -1,3 +1,4 @@
+import os
 from io import BytesIO
 from typing import Optional
 from discord.ext.commands.core import has_guild_permissions
@@ -10,8 +11,8 @@ class AccountCog(Cog):
     """Cog related to RaiderIO API"""
     def __init__(self, bot: Bot):
         self.bot: Bot = bot
-        self.api_base = "http://localhost:8000/api/v1"
-        self.api_token = ""
+        self.api_base = os.getenv("apiUrl") or "http://localhost:8000/api/v1"
+        self.api_token = os.getenv("apiToken") or ""
 
     @command()
     @has_guild_permissions(manage_roles=True, administrator=True)
